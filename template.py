@@ -1,6 +1,6 @@
 """
-    Advent of Code 2024
-    Day 00:
+Advent of Code 2024
+Day 00:
 """
 
 # pylint: skip-file

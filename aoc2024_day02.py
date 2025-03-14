@@ -1,6 +1,6 @@
 """
 Advent of Code 2024
-Day 02:
+Day 02: Red-Nosed Reports
 """
 
 from itertools import pairwise
