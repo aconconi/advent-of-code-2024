@@ -11,19 +11,25 @@ import pytest
 def parse_input(file_name):
     with open(file_name, "r", encoding="ascii") as data_file:
         edges, paths = data_file.read().strip().split("\n\n")
-    rules = [tuple(int(x) for x in line.split("|")) for line in edges.splitlines()]
+    edges = [line.split("|") for line in edges.splitlines()]
+    rules = [(int(line[0]), int(line[1])) for line in edges]
     updates = [[int(x) for x in line.split(",")] for line in paths.splitlines()]
-    return rules, updates
+    sorted_updates = []
+    for update in updates:
+        order_map = build_order_map(rules, update)
+        sorted_update = sorted(update, key=order_map.__getitem__)
+        sorted_updates.append(sorted_update)
+
+    return updates, sorted_updates
 
 
-def topological_sort(graph: dict):
+def topological_sort(graph: dict) -> list[int]:
     ans, temp, perm = [], set(), set()
 
     def visit(n):
         if n in perm:
             return
         if n in temp:
-            print(graph)
             raise ValueError("Graph has at least one cycle")
 
         temp.add(n)
@@ -40,34 +46,28 @@ def topological_sort(graph: dict):
     return ans[::-1]
 
 
-def build_order_map(rules, update):
+def build_order_map(rules: list[tuple[int, int]], update: list[int]) -> dict[int, int]:
     graph = defaultdict(list)
     for a, b in rules:
         if a in update and b in update:
             graph[a].append(b)
-            graph[b] += []
-    return {node: i for i, node in enumerate(topological_sort(graph))}
+    return {node: idx for idx, node in enumerate(topological_sort(graph))}
 
 
 def day05_part1(data):
-    rules, updates = data
-    ans = 0
-    for update in updates:
-        order_map = build_order_map(rules, update)
-        if update == sorted(update, key=lambda x: order_map[x]):
-            ans += update[len(update) // 2]
-    return ans
+    return sum(
+        sorted_update[len(update) // 2]
+        for update, sorted_update in zip(*data)
+        if update == sorted_update
+    )
 
 
 def day05_part2(data):
-    rules, updates = data
-    ans = 0
-    for update in updates:
-        order_map = build_order_map(rules, update)
-        sorted_update = sorted(update, key=lambda x: order_map[x])
-        if update != sorted_update:
-            ans += sorted_update[len(sorted_update) // 2]
-    return ans
+    return sum(
+        sorted_update[len(update) // 2]
+        for update, sorted_update in zip(*data)
+        if update != sorted_update
+    )
 
 
 @pytest.fixture(autouse=True, name="test_data")
