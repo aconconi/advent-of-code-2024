@@ -57,16 +57,18 @@ def day06_part1(grid):
                 pos = new_pos
 
 
-def day06_part2(grid):
-    def walk(grid, obstruction):
+def day06_part2x(grid):
+    def is_loop(grid, obstruction):
         pos = grid.start
         dir = 0
         seen = set()
         while True:
             if grid.get(pos) is None:
-                return len(set(pos for pos, _ in seen))
+                # went off the grid, no looop
+                return False
             if (pos, dir) in seen:
-                return 0
+                # loop found
+                return True
             seen.add((pos, dir))
             while (
                 grid.get(new_pos := grid.step(pos, dir)) == "#"
@@ -75,8 +77,35 @@ def day06_part2(grid):
                 dir = (dir + 1) % 4
             pos = new_pos
 
+
+def day06_part2(grid):
+    def is_loop(grid, obstruction):
+        pos = grid.start
+        dir = 0
+        seen = set()
+        while True:
+            if (pos, dir) in seen:
+                # loop found
+                return True
+            seen.add((pos, dir))
+            new_pos = grid.step(pos, dir)
+            cell = "#" if new_pos == obstruction else grid.get(new_pos)
+            match cell:
+                case None:
+                    # went off the grid, no loop detected
+                    return False
+                case "#":
+                    # hit a wall (or obstruction), turn right
+                    dir = (dir + 1) % 4
+                case _:
+                    # move forward
+                    pos = new_pos
+
     return sum(
-        walk(grid, (x, y)) == 0 for y in range(grid.heigth) for x in range(grid.width)
+        is_loop(grid, (x, y))
+        for x in range(grid.width)
+        for y in range(grid.heigth)
+        if grid.get((x, y)) == "."
     )
 
 
@@ -94,7 +123,7 @@ def test_day06_part2(test_data):
 
 
 if __name__ == "__main__":
-    input_data = parse_input("data/day06_test.txt")
+    input_data = parse_input("data/day06.txt")
 
     print("Day 06 Part 1:")
     print(day06_part1(input_data))  # Correct answer is 5080
