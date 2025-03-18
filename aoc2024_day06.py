@@ -57,27 +57,6 @@ def day06_part1(grid):
                 pos = new_pos
 
 
-def day06_part2x(grid):
-    def is_loop(grid, obstruction):
-        pos = grid.start
-        dir = 0
-        seen = set()
-        while True:
-            if grid.get(pos) is None:
-                # went off the grid, no looop
-                return False
-            if (pos, dir) in seen:
-                # loop found
-                return True
-            seen.add((pos, dir))
-            while (
-                grid.get(new_pos := grid.step(pos, dir)) == "#"
-                or new_pos == obstruction
-            ):
-                dir = (dir + 1) % 4
-            pos = new_pos
-
-
 def day06_part2(grid):
     def is_loop(grid, obstruction):
         pos = grid.start
