@@ -1,9 +1,9 @@
 """
 Advent of Code 2024
-Day 06:
+Day 06: Guard Gallivant
 """
 
-# pylint: skip-file
+import pytest
 
 
 def parse_input(file_name):
@@ -68,9 +68,10 @@ def day06_part2(grid):
             if (pos, dir) in seen:
                 return 0
             seen.add((pos, dir))
-            while (new_pos := grid.step(pos, dir)) == obstruction or grid.get(
-                new_pos
-            ) == "#":
+            while (
+                grid.get(new_pos := grid.step(pos, dir)) == "#"
+                or new_pos == obstruction
+            ):
                 dir = (dir + 1) % 4
             pos = new_pos
 
@@ -79,7 +80,6 @@ def day06_part2(grid):
     )
 
 
-"""
 @pytest.fixture(autouse=True, name="test_data")
 def fixture_test_data():
     return parse_input("data/day06_test.txt")
@@ -88,9 +88,10 @@ def fixture_test_data():
 def test_day06_part1(test_data):
     assert day06_part1(test_data) == 41
 
+
 def test_day06_part2(test_data):
     assert day06_part2(test_data) == 6
-"""
+
 
 if __name__ == "__main__":
     input_data = parse_input("data/day06_test.txt")
