@@ -10,12 +10,12 @@ import pytest
 
 
 def parse_input(file_name):
+    def process_line(line):
+        result, numbers = line.split(":")
+        return (int(result), [int(num) for num in numbers.split()])
+
     with open(file_name, "r", encoding="ascii") as data_file:
-        ans = []
-        for line in data_file.read().splitlines():
-            result, numbers = line.split(":")
-            ans.append((int(result), [int(num) for num in numbers.split()]))
-        return ans
+        return [process_line(line) for line in data_file.read().splitlines()]
 
 
 def evaluate(numbers, operators):
