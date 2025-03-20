@@ -1,6 +1,6 @@
 """
 Advent of Code 2024
-Day 08:
+Day 08: Resonant Collinearity
 """
 
 from collections import defaultdict
