@@ -44,7 +44,7 @@ class Grid:
                 yield new_pos
 
 
-def paths(grid, start):
+def find_paths(grid, start):
     stack = [[start]]
     paths_found = set()
     while stack:
@@ -63,14 +63,14 @@ def paths(grid, start):
 
 def day10_part1(grid):
     def score(pos):
-        return len(set(path[-1] for path in paths(grid, pos)))
+        return len(set(path[-1] for path in find_paths(grid, pos)))
 
     return sum(score(trailhead) for trailhead in grid.trailheads)
 
 
 def day10_part2(grid):
     def rating(pos):
-        return len(paths(grid, pos))
+        return len(find_paths(grid, pos))
 
     return sum(rating(trailhead) for trailhead in grid.trailheads)
 
