@@ -15,5 +15,5 @@
 |   6 | [Guard Gallivant](https://adventofcode.com/2024/day/6)                | [aoc2024_day06.py](aoc2024_day06.py) |
 |   7 | [Bridge Repair](https://adventofcode.com/2024/day/7)                  | [aoc2024_day07.py](aoc2024_day07.py) |
 |   8 | [Resonant Collinearity](https://adventofcode.com/2024/day/8)          | [aoc2024_day08.py](aoc2024_day08.py) |
-|   9 | [Disk Defragmenter](https://adventofcode.com/2024/day/9)
-| [aoc2024_day09.py](aoc2024_day09.py) |
+|   9 | [Disk Defragmenter](https://adventofcode.com/2024/day/9)              | [aoc2024_day09.py](aoc2024_day09.py) |
+|  10 | [Hoof It](https://adventofcode.com/2024/day/9)                        | [aoc2024_day10.py](aoc2024_day10.py) |
