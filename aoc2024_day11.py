@@ -1,6 +1,6 @@
 """
 Advent of Code 2024
-Day 11:
+Day 11: Plutonian Pebbles
 """
 
 from functools import cache
