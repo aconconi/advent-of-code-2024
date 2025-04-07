@@ -46,19 +46,19 @@ class Grid:
 
 def paths(grid, start):
     stack = [[start]]
-    paths = set()
+    paths_found = set()
     while stack:
         path = stack.pop()
         pos = path[-1]
         if pos in grid.destinations:
-            paths.add(tuple(path))
+            paths_found.add(tuple(path))
         else:
             stack.extend(
                 path + [new_pos]
                 for new_pos in grid.gen_neighbours(pos)
                 if new_pos not in path
             )
-    return paths
+    return paths_found
 
 
 def day10_part1(grid):
