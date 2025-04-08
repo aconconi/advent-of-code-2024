@@ -13,25 +13,23 @@ def parse_input(file_name):
 
 class Grid:
     def __init__(self, grid_strings):
-        # Create the grid by splitting each row into a list of characters
         self.grid = [list(row) for row in grid_strings]
-        self.height = len(self.grid)  # Height of the grid
-        self.width = len(self.grid[0]) if self.height > 0 else 0  # Width of the grid
+        self.height = len(self.grid)
+        self.width = len(self.grid[0]) if self.height > 0 else 0
 
     def is_inside(self, pos):
         x, y = pos
-        # Check if the position is inside the grid bounds
         return 0 <= x < self.width and 0 <= y < self.height
 
     def get(self, pos):
         x, y = pos
         return self.grid[y][x] if self.is_inside(pos) else None
 
-    def gen_neighbours(self, pos):
+    def gen_neighbors(self, pos, allow_external=False):
         x, y = pos
         for dx, dy in [(0, -1), (1, 0), (0, 1), (-1, 0)]:
             new_pos = x + dx, y + dy
-            if self.is_inside(new_pos):
+            if self.is_inside(new_pos) or allow_external:
                 yield new_pos
 
     def gen_positions(self):
@@ -48,20 +46,19 @@ class Grid:
                 visited.add(pos)
                 yield pos  # Yield the current position
                 # Recursively visit all neighboring positions
-                for neighbor in self.gen_neighbours(pos):
+                for neighbor in self.gen_neighbors(pos):
                     yield from flood(neighbor)
 
         # Start the flood fill from the starting position
         yield from flood(start_pos)
 
-
-def regions(grid):
-    plots = set(grid.gen_positions())
-    while plots:
-        plot = plots.pop()
-        region = set(grid.find_region(plot))
-        plots -= region
-        yield region
+    def find_regions(self):
+        plots = set(self.gen_positions())
+        while plots:
+            plot = plots.pop()
+            region = set(self.find_region(plot))
+            plots -= region
+            yield region
 
 
 def score_region(grid: Grid, start_pos: tuple[int, int]) -> int:
@@ -87,7 +84,6 @@ def score_region(grid: Grid, start_pos: tuple[int, int]) -> int:
             neighbor = (nx, ny)
             if grid.get(neighbor) != target:
                 perimeter += 1
-
                 # Corner correction logic to reduce over-counting
                 if (
                     (dx, dy) == (0, 1)
@@ -120,26 +116,20 @@ def score_region(grid: Grid, start_pos: tuple[int, int]) -> int:
     return area * perimeter
 
 
-def area(region):
-    return len(region)
-
-
-def neighbors(pos):
-    x, y = pos
-    for dx, dy in [(0, -1), (1, 0), (0, 1), (-1, 0)]:
-        yield x + dx, y + dy
-
-
-def perimeter(region):
-    return sum(neigh not in region for pos in region for neigh in neighbors(pos))
+def perimeter(grid, region):
+    return sum(
+        neigh not in region
+        for pos in region
+        for neigh in grid.gen_neighbors(pos, allow_external=True)
+    )
 
 
 def day12_part1(grid):
-    return sum(area(region) * perimeter(region) for region in regions(grid))
+    return sum(len(region) * perimeter(grid, region) for region in grid.find_regions())
 
 
 def day12_part2(grid):
-    return sum(score_region(grid, list(region)[0]) for region in regions(grid))
+    return sum(score_region(grid, list(region)[0]) for region in grid.find_regions())
 
 
 @pytest.fixture(autouse=True, name="test_data")
