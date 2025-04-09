@@ -152,4 +152,4 @@ if __name__ == "__main__":
     print(day12_part1(input_data))  # Correct answer is 1363484
 
     print("Day 12 Part 2:")
-    print(day12_part2(input_data))  # Correct answer is
+    print(day12_part2(input_data))  # Correct answer is 838988
