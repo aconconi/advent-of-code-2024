@@ -9,8 +9,8 @@ import numpy as np
 import pytest
 
 
-def parse_input(file_name):
-    def parse_machine(lines):
+def parse_input(file_name: str) -> list[tuple[np.ndarray, np.ndarray]]:
+    def parse_machine(lines: str) -> tuple[np.ndarray, np.ndarray]:
         matrix = [
             [int(x) for x in re.findall(r"\d+", line)] for line in lines.splitlines()
         ]
@@ -22,7 +22,7 @@ def parse_input(file_name):
         ]
 
 
-def solve_machine(machine, offset=0):
+def solve_machine(machine: tuple[np.ndarray, np.ndarray], offset: int = 0) -> int:
     coefficients_matrix, constant_vector = machine
     if offset:
         constant_vector = constant_vector + offset  # avoid mutating input
@@ -34,11 +34,11 @@ def solve_machine(machine, offset=0):
     return 0
 
 
-def day13_part1(data):
+def day13_part1(data: list[tuple[np.ndarray, np.ndarray]]) -> int:
     return sum(solve_machine(machine) for machine in data)
 
 
-def day13_part2(data):
+def day13_part2(data: list[tuple[np.ndarray, np.ndarray]]) -> int:
     return sum(solve_machine(machine, offset=10_000_000_000_000) for machine in data)
 
 
@@ -52,11 +52,11 @@ def test_day13_part1(test_data):
 
 
 def test_day13_part2(test_data):
-    assert day13_part2(test_data) == 0
+    assert day13_part2(test_data) == 875_318_608_908
 
 
 if __name__ == "__main__":
-    input_data = parse_input("data/day13_test.txt")
+    input_data = parse_input("data/day13.txt")
 
     print("Day 13 Part 1:")
     print(day13_part1(input_data))  # Correct answer is 35574
