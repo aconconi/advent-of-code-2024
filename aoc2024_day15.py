@@ -1,25 +1,16 @@
 """
 Advent of Code 2024
-Day 15:
+Day 15: Warehouse Woes
 """
 
-# pylint: skip-file
+import pytest
 
 DIRMOVE = {">": (1, 0), "<": (-1, 0), "^": (0, -1), "v": (0, 1)}
 
 
 class Grid:
-    def __init__(self, grid_data, double=False):
-        if not double:
-            grid_lines = grid_data.splitlines()
-        else:
-            grid_lines = [
-                s.replace(".", "..")
-                .replace("#", "##")
-                .replace("@", "@.")
-                .replace("O", "[]")
-                for s in grid_data.splitlines()
-            ]
+    def __init__(self, grid_data):
+        grid_lines = grid_data.splitlines()
         self.grid = [list(row) for row in grid_lines]
         self.submarine = next(
             (x, y)
@@ -35,64 +26,6 @@ class Grid:
     def set(self, pos, value):
         x, y = pos
         self.grid[y][x] = value
-
-    def can_move(self, pos, dir):
-        next_pos = step(pos, dir)
-        next_value = self.get(next_pos)
-        if next_value == ".":
-            return True
-        if next_value == "O":
-            return self.can_move(next_pos, dir)
-        return False  # Wall
-
-    def move(self, pos, dir):
-        current_value = self.get(pos)
-        next_pos = step(pos, dir)
-        next_value = self.get(next_pos)
-
-        if next_value == ".":
-            self.set(pos, ".")
-            self.set(next_pos, current_value)
-            if current_value == "@":
-                self.submarine = next_pos
-        elif next_value == "O":
-            self.move(next_pos, dir)
-            self.move(pos, dir)
-
-    def can_move2(self, pos, dir):
-        next_pos = step(pos, dir)
-        next_value = self.get(next_pos)
-        # Space
-        if next_value == ".":
-            ans = True
-        elif next_value == "#":
-            ans = False
-        elif dir in "><":
-            ans = self.can_move2(next_pos, dir)
-        else:
-            other_pos = (
-                step(next_pos, "<") if next_value == "]" else step(next_pos, ">")
-            )
-            ans = self.can_move2(next_pos, dir) and self.can_move2(other_pos, dir)
-        return ans
-
-    def move2(self, pos, dir):
-        current_value = self.get(pos)
-        next_pos = step(pos, dir)
-        next_value = self.get(next_pos)
-        if next_value == ".":
-            self.set(pos, ".")
-            self.set(next_pos, current_value)
-            if current_value == "@":
-                self.submarine = next_pos
-        elif next_value in "[]":
-            self.move2(next_pos, dir)
-            if dir in "^v":
-                other_pos = (
-                    step(next_pos, "<") if next_value == "]" else step(next_pos, ">")
-                )
-                self.move2(other_pos, dir)
-            self.move2(pos, dir)
 
     def score(self):
         return sum(
@@ -118,39 +51,81 @@ def step(pos, dir):
     return x + dx, y + dy
 
 
-def day15_part1(data):
-    grid_data, directions = data
+def can_move(grid, pos, dir):
+    next_pos = step(pos, dir)
+    next_val = grid.get(next_pos)
+    ans = False
+    match next_val:
+        case ".":
+            ans = True
+        case "O":
+            ans = can_move(grid, next_pos, dir)
+        case "[" | "]" if dir in "><":
+            ans = can_move(grid, next_pos, dir)
+        case "[" | "]" if dir in "^v":
+            other_pos = step(next_pos, "<") if next_val == "]" else step(next_pos, ">")
+            ans = can_move(grid, next_pos, dir) and can_move(grid, other_pos, dir)
+    return ans
+
+
+def move(grid, pos, dir):
+    current_val = grid.get(pos)
+    next_pos = step(pos, dir)
+    next_val = grid.get(next_pos)
+
+    if next_val == ".":
+        grid.set(pos, ".")
+        grid.set(next_pos, current_val)
+        if current_val == "@":
+            grid.submarine = next_pos
+    elif next_val == "O":
+        move(grid, next_pos, dir)
+        move(grid, pos, dir)
+    elif next_val in "[]":
+        move(grid, next_pos, dir)
+        if dir in "^v":
+            other_pos = step(next_pos, "<") if next_val == "]" else step(next_pos, ">")
+            move(grid, other_pos, dir)
+        move(grid, pos, dir)
+
+
+def solve(grid_data, directions):
     grid = Grid(grid_data)
     for dir in directions:
-        if grid.can_move(grid.submarine, dir):
-            grid.move(grid.submarine, dir)
+        if can_move(grid, grid.submarine, dir):
+            move(grid, grid.submarine, dir)
     return grid.score()
+
+
+def day15_part1(data):
+    return solve(*data)
 
 
 def day15_part2(data):
     grid_data, directions = data
-    grid = Grid(grid_data, double=True)
-    for dir in directions:
-        if grid.can_move2(grid.submarine, dir):
-            grid.move2(grid.submarine, dir)
-    return grid.score()
+    transformed_lines = [
+        s.replace(".", "..").replace("#", "##").replace("@", "@.").replace("O", "[]")
+        for s in grid_data.splitlines()
+    ]
+    transformed_grid_data = "\n".join(transformed_lines)
+    return solve(transformed_grid_data, directions)
 
 
-"""
 @pytest.fixture(autouse=True, name="test_data")
 def fixture_test_data():
     return parse_input("data/day15_test.txt")
 
 
 def test_day15_part1(test_data):
-    assert day15_part1(test_data) == 2028
+    assert day15_part1(test_data) == 10092
+
 
 def test_day15_part2(test_data):
-    assert day15_part2(test_data)
-"""
+    assert day15_part2(test_data) == 9021
+
 
 if __name__ == "__main__":
-    input_data = parse_input("data/day15.txt")
+    input_data = parse_input("data/day15_test.txt")
 
     print("Day 15 Part 1:")
     print(day15_part1(input_data))  # Correct answer is 1438161
