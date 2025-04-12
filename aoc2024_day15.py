@@ -54,18 +54,19 @@ def step(pos, dir):
 def can_move(grid, pos, dir):
     next_pos = step(pos, dir)
     next_val = grid.get(next_pos)
-    ans = False
     match next_val:
         case ".":
-            ans = True
+            return True
         case "O":
-            ans = can_move(grid, next_pos, dir)
+            return can_move(grid, next_pos, dir)
         case "[" | "]" if dir in "><":
-            ans = can_move(grid, next_pos, dir)
+            return can_move(grid, next_pos, dir)
         case "[" | "]" if dir in "^v":
-            other_pos = step(next_pos, "<") if next_val == "]" else step(next_pos, ">")
-            ans = can_move(grid, next_pos, dir) and can_move(grid, other_pos, dir)
-    return ans
+            other_pos = step(next_pos, "<" if next_val == "]" else ">")
+            return can_move(grid, next_pos, dir) and can_move(grid, other_pos, dir)
+        case "#":
+            return False
+    raise ValueError(f"Unknown cell value {next_val}")
 
 
 def move(grid, pos, dir):
