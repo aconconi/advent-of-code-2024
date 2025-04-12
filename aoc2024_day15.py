@@ -105,11 +105,10 @@ def day15_part1(data):
 
 def day15_part2(data):
     grid_data, directions = data
-    transformed_lines = [
+    transformed_grid_data = "\n".join(
         s.replace(".", "..").replace("#", "##").replace("@", "@.").replace("O", "[]")
         for s in grid_data.splitlines()
-    ]
-    transformed_grid_data = "\n".join(transformed_lines)
+    )
     return solve(transformed_grid_data, directions)
 
 
