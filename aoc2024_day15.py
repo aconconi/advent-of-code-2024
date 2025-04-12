@@ -72,21 +72,23 @@ def move(grid, pos, dir):
     current_val = grid.get(pos)
     next_pos = step(pos, dir)
     next_val = grid.get(next_pos)
-
-    if next_val == ".":
-        grid.set(pos, ".")
-        grid.set(next_pos, current_val)
-        if current_val == "@":
-            grid.submarine = next_pos
-    elif next_val == "O":
-        move(grid, next_pos, dir)
-        move(grid, pos, dir)
-    elif next_val in "[]":
-        move(grid, next_pos, dir)
-        if dir in "^v":
-            other_pos = step(next_pos, "<") if next_val == "]" else step(next_pos, ">")
-            move(grid, other_pos, dir)
-        move(grid, pos, dir)
+    match next_val:
+        case ".":
+            grid.set(pos, ".")
+            grid.set(next_pos, current_val)
+            if current_val == "@":
+                grid.submarine = next_pos
+        case "O":
+            move(grid, next_pos, dir)
+            move(grid, pos, dir)
+        case "[" | "]":
+            move(grid, next_pos, dir)
+            if dir in "^v":
+                other_pos = (
+                    step(next_pos, "<") if next_val == "]" else step(next_pos, ">")
+                )
+                move(grid, other_pos, dir)
+            move(grid, pos, dir)
 
 
 def solve(grid_data, directions):
@@ -125,7 +127,7 @@ def test_day15_part2(test_data):
 
 
 if __name__ == "__main__":
-    input_data = parse_input("data/day15_test.txt")
+    input_data = parse_input("data/day15.txt")
 
     print("Day 15 Part 1:")
     print(day15_part1(input_data))  # Correct answer is 1438161
