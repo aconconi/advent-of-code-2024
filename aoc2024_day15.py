@@ -36,49 +36,70 @@ class Grid:
         x, y = pos
         self.grid[y][x] = value
 
-    def commit(self, pos, next_pos):
-        value = self.get(pos)
-        self.set(pos, ".")
-        self.set(next_pos, value)
-        if value == "@":
-            self.submarine = next_pos
+    def can_move(self, pos, dir):
+        next_pos = step(pos, dir)
+        next_value = self.get(next_pos)
+        if next_value == ".":
+            return True
+        if next_value == "O":
+            return self.can_move(next_pos, dir)
+        return False  # Wall
 
     def move(self, pos, dir):
+        current_value = self.get(pos)
         next_pos = step(pos, dir)
-        if self.get(next_pos) == "." or (
-            self.get(next_pos) == "O" and self.move(next_pos, dir)
-        ):
-            self.commit(pos, next_pos)
-            return True
-        return False
+        next_value = self.get(next_pos)
+
+        if next_value == ".":
+            self.set(pos, ".")
+            self.set(next_pos, current_value)
+            if current_value == "@":
+                self.submarine = next_pos
+        elif next_value == "O":
+            self.move(next_pos, dir)
+            self.move(pos, dir)
+
+    def can_move2(self, pos, dir):
+        next_pos = step(pos, dir)
+        next_value = self.get(next_pos)
+        # Space
+        if next_value == ".":
+            ans = True
+        elif next_value == "#":
+            ans = False
+        elif dir in "><":
+            ans = self.can_move2(next_pos, dir)
+        else:
+            other_pos = (
+                step(next_pos, "<") if next_value == "]" else step(next_pos, ">")
+            )
+            ans = self.can_move2(next_pos, dir) and self.can_move2(other_pos, dir)
+        return ans
 
     def move2(self, pos, dir):
+        current_value = self.get(pos)
         next_pos = step(pos, dir)
-        if self.get(next_pos) == ".":
-            self.commit(pos, next_pos)
-            return True
-        if self.get(next_pos) == "#":
-            return False
-        # it's a box
-        if dir in "><":
-            if self.move2(next_pos, dir):
-                self.commit(pos, next_pos)
-                return True
-        other_pos = (
-            step(next_pos, "<") if self.get(next_pos) == "]" else step(next_pos, ">")
-        )
-        if self.move2(next_pos, dir) and self.move2(other_pos, dir):  # WRONG
-            self.commit(pos, next_pos)
-            return True
-
-    # box with vertical movement, the hard case
+        next_value = self.get(next_pos)
+        if next_value == ".":
+            self.set(pos, ".")
+            self.set(next_pos, current_value)
+            if current_value == "@":
+                self.submarine = next_pos
+        elif next_value in "[]":
+            self.move2(next_pos, dir)
+            if dir in "^v":
+                other_pos = (
+                    step(next_pos, "<") if next_value == "]" else step(next_pos, ">")
+                )
+                self.move2(other_pos, dir)
+            self.move2(pos, dir)
 
     def score(self):
         return sum(
             x + y * 100
             for y, row in enumerate(self.grid)
             for x, cell in enumerate(row)
-            if cell == "O"
+            if cell in "O["
         )
 
     def __str__(self):
@@ -100,25 +121,18 @@ def step(pos, dir):
 def day15_part1(data):
     grid_data, directions = data
     grid = Grid(grid_data)
-    print(grid)
-    pos = grid.submarine
-    print("submarine at", pos)
     for dir in directions:
-        print(f"\nMove {dir}:")
-        grid.move(grid.submarine, dir)
-        print(grid)
+        if grid.can_move(grid.submarine, dir):
+            grid.move(grid.submarine, dir)
     return grid.score()
 
 
 def day15_part2(data):
     grid_data, directions = data
     grid = Grid(grid_data, double=True)
-    pos = grid.submarine
-    print("submarine at", pos)
     for dir in directions:
-        print(f"\nMove {dir}:")
-        grid.move2(grid.submarine, dir)
-        print(grid)
+        if grid.can_move2(grid.submarine, dir):
+            grid.move2(grid.submarine, dir)
     return grid.score()
 
 
@@ -136,10 +150,10 @@ def test_day15_part2(test_data):
 """
 
 if __name__ == "__main__":
-    input_data = parse_input("data/day15_test3.txt")
+    input_data = parse_input("data/day15.txt")
 
-    # print("Day 15 Part 1:")
-    # print(day15_part1(input_data))  # Correct answer is 1438161
+    print("Day 15 Part 1:")
+    print(day15_part1(input_data))  # Correct answer is 1438161
 
     print("Day 15 Part 2:")
-    print(day15_part2(input_data))  # Correct answer is
+    print(day15_part2(input_data))  # Correct answer is 1437981
