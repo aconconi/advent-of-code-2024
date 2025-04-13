@@ -23,3 +23,4 @@
 |  14 | [Restroom Redoubt](https://adventofcode.com/2024/day/14)              | [aoc2024_day14.py](aoc2024_day14.py) |
 |  15 | [Warehouse Woes](https://adventofcode.com/2024/day/15)                | [aoc2024_day15.py](aoc2024_day15.py) |
 |  16 | [Reindeer Maze](https://adventofcode.com/2024/day/16)                 | [aoc2024_day16.py](aoc2024_day16.py) |
+|  17 | [Chronospatial Computer](https://adventofcode.com/2024/day/17)        | [aoc2024_day17.py](aoc2024_day17.py) |

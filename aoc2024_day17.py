@@ -1,6 +1,6 @@
 """
 Advent of Code 2024
-Day 17:
+Day 17: Chronospatial Computer
 """
 
 import re
