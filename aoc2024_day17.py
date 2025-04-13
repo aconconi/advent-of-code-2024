@@ -26,51 +26,51 @@ def combo(operand: int, a: int, b: int, c: int) -> int:
             raise ValueError(f"Invalid or reserved {operand=}.")
 
 
-def instruction_adv(operand, a, b, c, ip):
+def instruction_adv(operand, a, b, c, ip, output):
     a = int(a / 2 ** combo(operand, a, b, c))
     ip += 2
-    return a, b, c, ip, None
+    return a, b, c, ip, output
 
 
-def instruction_bxl(operand, a, b, c, ip):
+def instruction_bxl(operand, a, b, c, ip, output):
     b ^= operand
     ip += 2
-    return a, b, c, ip, None
+    return a, b, c, ip, output
 
 
-def instruction_bst(operand, a, b, c, ip):
+def instruction_bst(operand, a, b, c, ip, output):
     b = combo(operand, a, b, c) % 8
     ip += 2
-    return a, b, c, ip, None
+    return a, b, c, ip, output
 
 
-def instruction_jnz(operand, a, b, c, ip):
+def instruction_jnz(operand, a, b, c, ip, output):
     ip = operand if a != 0 else ip + 2
-    return a, b, c, ip, None
+    return a, b, c, ip, output
 
 
-def instruction_bxc(operand, a, b, c, ip):
+def instruction_bxc(operand, a, b, c, ip, output):
     b ^= c
     ip += 2
-    return a, b, c, ip, None
+    return a, b, c, ip, output
 
 
-def instruction_out(operand, a, b, c, ip):
-    instr_output = combo(operand, a, b, c) % 8
+def instruction_out(operand, a, b, c, ip, output):
+    output = output + [combo(operand, a, b, c) % 8]
     ip += 2
-    return a, b, c, ip, instr_output
+    return a, b, c, ip, output
 
 
-def instruction_bdv(operand, a, b, c, ip):
+def instruction_bdv(operand, a, b, c, ip, output):
     b = int(a / 2 ** combo(operand, a, b, c))
     ip += 2
-    return a, b, c, ip, None
+    return a, b, c, ip, output
 
 
-def instruction_cdv(operand, a, b, c, ip):
+def instruction_cdv(operand, a, b, c, ip, output):
     c = int(a / 2 ** combo(operand, a, b, c))
     ip += 2
-    return a, b, c, ip, None
+    return a, b, c, ip, output
 
 
 INSTRUCTIONS = [
@@ -90,9 +90,7 @@ def compute(a, b, c, program):
     output = []
     while ip < len(program) - 1:
         opcode, operand = program[ip], program[ip + 1]
-        a, b, c, ip, instr_output = INSTRUCTIONS[opcode](operand, a, b, c, ip)
-        if instr_output is not None:
-            output.append(instr_output)
+        a, b, c, ip, output = INSTRUCTIONS[opcode](operand, a, b, c, ip, output)
     return output
 
 
@@ -103,7 +101,6 @@ def day17_part1(data):
 
 def day17_part2(data):
     _, b, c, program = data
-
     stack = [(0, 0)]
     while stack:
         a, i = stack.pop()
@@ -126,7 +123,7 @@ def test_day17_part2():
 
 
 if __name__ == "__main__":
-    input_data = parse_input("data/day17_test2.txt")
+    input_data = parse_input("data/day17.txt")
 
     print("Day 17 Part 1:")
     print(day17_part1(input_data))  # Correct answer is 2,0,7,3,0,3,1,3,7
