@@ -19,4 +19,7 @@
 |  10 | [Hoof It](https://adventofcode.com/2024/day/10)                       | [aoc2024_day10.py](aoc2024_day10.py) |
 |  11 | [Plutonian Pebbles](https://adventofcode.com/2024/day/11)             | [aoc2024_day11.py](aoc2024_day11.py) |
 |  12 | [Garden Groups](https://adventofcode.com/2024/day/12 )                | [aoc2024_day12.py](aoc2024_day12.py) |
-|  13 | [Claw Contraption](https://adventofcode.com/2024/day/13 )             | [aoc2024_day13.py](aoc2024_day13.py) |
+|  13 | [Claw Contraption](https://adventofcode.com/2024/day/13)              | [aoc2024_day13.py](aoc2024_day13.py) |
+|  14 | [Restroom Redoubt](https://adventofcode.com/2024/day/14)              | [aoc2024_day14.py](aoc2024_day14.py) |
+|  15 | [Warehouse Woes](https://adventofcode.com/2024/day/15)                | [aoc2024_day15.py](aoc2024_day15.py) |
+|  16 | [Reindeer Maze](https://adventofcode.com/2024/day/16)                 | [aoc2024_day16.py](aoc2024_day16.py) |

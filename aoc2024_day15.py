@@ -113,17 +113,30 @@ def day15_part2(data):
     return solve(transformed_grid_data, directions)
 
 
-@pytest.fixture(autouse=True, name="test_data")
-def fixture_test_data():
-    return parse_input("data/day15_test.txt")
+@pytest.mark.parametrize(
+    "file_name, expected_part1",
+    [
+        ("data/day15_test.txt", 10092),
+        ("data/day15_test2.txt", 2028),
+        ("data/day15_test3.txt", 908),
+    ],
+)
+def test_day16_part1(file_name, expected_part1):
+    data = parse_input(file_name)
+    assert day15_part1(data) == expected_part1
 
 
-def test_day15_part1(test_data):
-    assert day15_part1(test_data) == 10092
-
-
-def test_day15_part2(test_data):
-    assert day15_part2(test_data) == 9021
+@pytest.mark.parametrize(
+    "file_name, expected_part2",
+    [
+        ("data/day15_test.txt", 9021),
+        ("data/day15_test2.txt", 1751),
+        ("data/day15_test3.txt", 618),
+    ],
+)
+def test_day16_part2(file_name, expected_part2):
+    data = parse_input(file_name)
+    assert day15_part2(data) == expected_part2
 
 
 if __name__ == "__main__":
