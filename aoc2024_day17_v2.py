@@ -21,17 +21,6 @@ class Computer:
         self.output = []
         self.program = program
 
-        self.instructions = [
-            self.instruction_adv,  # 0
-            self.instruction_bxl,  # 1
-            self.instruction_bst,  # 2
-            self.instruction_jnz,  # 3
-            self.instruction_bxc,  # 4
-            self.instruction_out,  # 5
-            self.instruction_bdv,  # 6
-            self.instruction_cdv,  # 7
-        ]
-
     def combo(self, operand: int) -> int:
         match operand:
             case 0 | 1 | 2 | 3:
@@ -45,41 +34,38 @@ class Computer:
             case _:
                 raise ValueError(f"Invalid or reserved {operand=}.")
 
-    def instruction_adv(self, operand: int):
-        self.a = int(self.a / 2 ** self.combo(operand))
-        self.ip += 2
-
-    def instruction_bxl(self, operand: int):
-        self.b ^= operand
-        self.ip += 2
-
-    def instruction_bst(self, operand: int):
-        self.b = self.combo(operand) % 8
-        self.ip += 2
-
-    def instruction_jnz(self, operand: int):
-        self.ip = operand if self.a != 0 else self.ip + 2
-
-    def instruction_bxc(self, _: int):
-        self.b ^= self.c
-        self.ip += 2
-
-    def instruction_out(self, operand: int):
-        self.output.append(self.combo(operand) % 8)
-        self.ip += 2
-
-    def instruction_bdv(self, operand: int):
-        self.b = int(self.a / 2 ** self.combo(operand))
-        self.ip += 2
-
-    def instruction_cdv(self, operand: int):
-        self.c = int(self.a / 2 ** self.combo(operand))
-        self.ip += 2
+    def instruction(self, opcode: int, operand: int):
+        match opcode:
+            case 0:  # adv
+                self.a = int(self.a / 2 ** self.combo(operand))
+                self.ip += 2
+            case 1:  # bxl
+                self.b ^= operand
+                self.ip += 2
+            case 2:  # bst
+                self.b = self.combo(operand) % 8
+                self.ip += 2
+            case 3:  # jnz
+                self.ip = operand if self.a != 0 else self.ip + 2
+            case 4:  # bxc
+                self.b ^= self.c
+                self.ip += 2
+            case 5:  # out
+                self.output.append(self.combo(operand) % 8)
+                self.ip += 2
+            case 6:  # bdv
+                self.b = int(self.a / 2 ** self.combo(operand))
+                self.ip += 2
+            case 7:  # cdv
+                self.c = int(self.a / 2 ** self.combo(operand))
+                self.ip += 2
+            case _:
+                raise ValueError(f"Invalid opcode: {opcode}")
 
     def run(self) -> list[int]:
         while self.ip < len(self.program) - 1:
-            op, operand = self.program[self.ip], self.program[self.ip + 1]
-            self.instructions[op](operand)
+            opcode, operand = self.program[self.ip], self.program[self.ip + 1]
+            self.instruction(opcode, operand)
         return self.output
 
 
