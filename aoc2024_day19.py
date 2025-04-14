@@ -61,7 +61,7 @@ def test_day19_part2(test_data):
 
 
 if __name__ == "__main__":
-    input_data = parse_input("data/day19_test.txt")
+    input_data = parse_input("data/day19.txt")
 
     print("Day 19 Part 1:")
     print(day19_part1(input_data))  # Correct answer is 263
