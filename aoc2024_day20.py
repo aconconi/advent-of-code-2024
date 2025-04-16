@@ -16,14 +16,9 @@ def parse_input(file_name):
             (x, y)
             for y, row in enumerate(rows)
             for x, cell in enumerate(row)
-            if cell in ".SE"
+            if cell != "#"
         }
-        start = next(
-            (x, y)
-            for y, row in enumerate(rows)
-            for x, cell in enumerate(row)
-            if cell == "S"
-        )
+        start = next((x, y) for (x, y) in walkable if rows[y][x] == "S")
         return walkable, start
 
 
@@ -56,13 +51,12 @@ def manhattan(a: tuple[int, int], b: tuple[int, int]) -> int:
 
 
 def solve(walkable, start, min_saving, max_distance):
-    count = 0
     dist = distances(walkable, start)
-    for (pos_a, dist_a), (pos_b, dist_b) in combinations(dist.items(), 2):
-        d = manhattan(pos_a, pos_b)
-        if d <= max_distance and dist_b - dist_a - d >= min_saving:
-            count += 1
-    return count
+    return sum(
+        (d := manhattan(pos_a, pos_b)) <= max_distance
+        and dist_b - dist_a - d >= min_saving
+        for (pos_a, dist_a), (pos_b, dist_b) in combinations(dist.items(), 2)
+    )
 
 
 def day20_part1(data):
