@@ -80,11 +80,11 @@ def fixture_test_data():
     return parse_input("data/day21_test.txt")
 
 
-def test_day20_part1(test_data):
+def test_day21_part1(test_data):
     assert day21_part1(test_data) == 126384
 
 
-def test_day20_part2(test_data):
+def test_day21_part2(test_data):
     assert day21_part2(test_data) == 154115708116294
 
 

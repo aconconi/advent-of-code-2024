@@ -3,6 +3,8 @@ Advent of Code 2024
 Day 22: Monkey Market
 """
 
+from collections import defaultdict
+
 import pytest
 
 
@@ -29,26 +31,25 @@ def day22_part1(data: list[int]) -> int:
 
 
 def day22_part2(data: list[int]) -> int:
+    sequences = defaultdict(list)
 
-    sequences = {}
     for number in data:
-        monkey = [(number % 10, None)]
+        monkey = [number % 10]  # Initial price
         monkey_sequences = set()
+
         for i in range(2000):
             number = evolve(number)
             price = number % 10
-            monkey.append((price, price - monkey[i][0]))
+            monkey.append(price)
 
             if i >= 3:
-                # Create the sequence
-                sequence = tuple(monkey[j][1] for j in range(i - 2, i + 2))
+                # Create the sequence and check if it's a new one
+                sequence = tuple(monkey[j] - monkey[i - 3] for j in range(i - 2, i + 2))
                 if sequence not in monkey_sequences:
                     monkey_sequences.add(sequence)
-                    sequences[sequence] = sequences.get(sequence, []) + [price]
+                    sequences[sequence].append(price)
 
-    # Return the maximum sum of the sequences
-    return max(map(sum, sequences.values()))
-
+    return max(sum(sequence) for sequence in sequences.values())
 
 @pytest.fixture(autouse=True, name="test_data")
 def fixture_test_data():
@@ -64,7 +65,7 @@ def test_day22_part2(test_data):
 
 
 if __name__ == "__main__":
-    input_data = parse_input("data/day22_test.txt")
+    input_data = parse_input("data/day22.txt")
 
     print("Day 22 Part 1:")
     print(day22_part1(input_data))  # Correct answer is 18317943467
