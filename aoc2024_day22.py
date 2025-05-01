@@ -3,10 +3,8 @@ Advent of Code 2024
 Day 22: Monkey Market
 """
 
-from collections import defaultdict
-
 import pytest
-
+from collections import defaultdict
 
 def parse_input(file_name):
     with open(file_name, "r", encoding="ascii") as data_file:
@@ -30,26 +28,28 @@ def day22_part1(data: list[int]) -> int:
     return sum(repeat_func(evolve, number, 2000) for number in data)
 
 
+def gen_monkey_sequences(number: int):
+    prices = [number % 10]
+    seen = set()
+
+    for _ in range(2000):
+        number = evolve(number)
+        price = number % 10
+        prices.append(price)
+        if len(prices) < 5:
+            continue
+        sequence = tuple(x - prices[-5] for x in prices[-4:])
+        if sequence not in seen:
+            seen.add(sequence)
+            yield sequence, price
+
 def day22_part2(data: list[int]) -> int:
-    sequences = defaultdict(list)
-
+    seq_price_map = defaultdict(int)
     for number in data:
-        monkey = [number % 10]  # Initial price
-        monkey_sequences = set()
+        for sequence, price in gen_monkey_sequences(number):
+            seq_price_map[sequence] += price
+    return max(seq_price_map.values())
 
-        for i in range(2000):
-            number = evolve(number)
-            price = number % 10
-            monkey.append(price)
-
-            if i >= 3:
-                # Create the sequence and check if it's a new one
-                sequence = tuple(monkey[j] - monkey[i - 3] for j in range(i - 2, i + 2))
-                if sequence not in monkey_sequences:
-                    monkey_sequences.add(sequence)
-                    sequences[sequence].append(price)
-
-    return max(sum(sequence) for sequence in sequences.values())
 
 @pytest.fixture(autouse=True, name="test_data")
 def fixture_test_data():
