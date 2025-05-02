@@ -4,6 +4,7 @@ Day 21: Keypad Conundrum
 """
 
 from itertools import product
+
 import pytest
 
 Coordinates = tuple[int, int]
@@ -31,7 +32,12 @@ def move_sequence(p1: Coordinates, p2: Coordinates) -> tuple[str, str]:
 
 
 def press_cost(path: str, prev_layer: dict[tuple[str, str], int]) -> int:
-    return sum(prev_layer.get((a, b), float("inf")) for a, b in zip("A" + path, path))
+    try:
+        return sum(prev_layer[(a, b)] for a, b in zip("A" + path, path))
+    except KeyError as e:
+        raise ValueError(
+            f"Invalid path segment {e.args[0]} not found in previous layer."
+        ) from e
 
 
 def compute_layer(
