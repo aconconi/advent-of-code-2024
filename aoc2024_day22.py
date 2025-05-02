@@ -3,8 +3,10 @@ Advent of Code 2024
 Day 22: Monkey Market
 """
 
-import pytest
 from collections import defaultdict
+
+import pytest
+
 
 def parse_input(file_name):
     with open(file_name, "r", encoding="ascii") as data_file:
@@ -19,7 +21,6 @@ def evolve(number: int) -> int:
 
 
 def day22_part1(data: list[int]) -> int:
-
     def repeat_func(func, value, steps):
         for _ in range(steps):
             value = func(value)
@@ -42,6 +43,7 @@ def gen_monkey_sequences(number: int):
         if sequence not in seen:
             seen.add(sequence)
             yield sequence, price
+
 
 def day22_part2(data: list[int]) -> int:
     seq_price_map = defaultdict(int)
