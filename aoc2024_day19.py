@@ -1,6 +1,6 @@
 """
 Advent of Code 2024
-Day 19:
+Day 19: Linen Layout
 """
 
 import pytest

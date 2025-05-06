@@ -1,6 +1,6 @@
 """
 Advent of Code 2024
-Day 23:
+Day 23: LAN Party
 """
 
 from collections import defaultdict
@@ -20,46 +20,43 @@ def parse_input(file_name):
     return graph
 
 
-def find_fully_connected_triads(graph):
-    return {
+def bron_kerbosch(graph):
+    cliques = []
+    stack = [(set(), set(graph.keys()), set())]
+    while stack:
+        r, p, x = stack.pop()
+        if not p and not x:
+            cliques.append(r)
+        else:
+            for node in list(p):
+                stack.append(
+                    (
+                        r.union({node}),
+                        p.intersection(graph[node]),
+                        x.intersection(graph[node]),
+                    )
+                )
+                p.remove(node)
+                x.add(node)
+    return set(tuple(sorted(clique)) for clique in cliques)
+
+
+def day23_part1(graph):
+    connected_triads = {
         tuple(sorted([node, neighbor1, neighbor2]))
         for node, neighbors in graph.items()
         for neighbor1, neighbor2 in combinations(neighbors, 2)
         if neighbor2 in graph[neighbor1]
     }
-
-
-def find_cliques(graph):
-    cliques = []
-
-    def bron_kerbosch(r, p, x):
-        if not p and not x:
-            cliques.append(r)
-        for node in list(p):
-            bron_kerbosch(
-                r.union({node}),
-                p.intersection(graph[node]),
-                x.intersection(graph[node]),
-            )
-            p.remove(node)
-            x.add(node)
-
-    bron_kerbosch(set(), set(graph.keys()), set())
-    return set(tuple(sorted(c)) for c in cliques)
-
-
-def day23_part1(graph):
     return sum(
-        any(computer[0] == "t" for computer in triad)
-        for triad in find_fully_connected_triads(graph)
+        any(computer.startswith("t") for computer in triad)
+        for triad in connected_triads
     )
 
 
 def day23_part2(graph):
-    cliques = find_cliques(graph)
-    if cliques:
-        max_clique = max(cliques, key=len) if cliques else []
-        return ",".join(sorted(max_clique))
+    cliques = bron_kerbosch(graph)
+    return ",".join(max(cliques, key=len, default=[]))
 
 
 @pytest.fixture(autouse=True, name="test_data")

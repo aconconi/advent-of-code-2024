@@ -25,3 +25,8 @@
 |  16 | [Reindeer Maze](https://adventofcode.com/2024/day/16)                | [aoc2024_day16.py](aoc2024_day16.py) |
 |  17 | [Chronospatial Computer](https://adventofcode.com/2024/day/17)       | [aoc2024_day17.py](aoc2024_day17.py) |
 |  18 | [RAM Run](https://adventofcode.com/2024/day/18)                      | [aoc2024_day18.py](aoc2024_day18.py) |
+|  19 | [Linen Layout](https://adventofcode.com/2024/day/19)                 | [aoc2024_day19.py](aoc2024_day19.py) |
+|  20 | [Linen Layout](https://adventofcode.com/2024/day/20)                 | [aoc2024_day20.py](aoc2024_day20.py) |
+|  21 | [Keypad Conundrum](https://adventofcode.com/2024/day/21)             | [aoc2024_day21.py](aoc2024_day21.py) |
+|  22 | [Monkey Market](https://adventofcode.com/2024/day/22)                | [aoc2024_day22.py](aoc2024_day22.py) |
+|  23 | [LAN Party](https://adventofcode.com/2024/day/23)                    | [aoc2024_day23.py](aoc2024_day23.py) |
