@@ -100,7 +100,7 @@ def day17_part1(data):
 
 
 def day17_part2(data):
-    _, b, c, program = data
+    *_, program = data
     stack = [(0, 0)]
     while stack:
         a, i = stack.pop()

@@ -42,6 +42,7 @@ def day14_part2(robots, width, height):
         robots = step(robots, width, height)
         if len(robots) == len(set((x, y) for x, y, _, _ in robots)):
             return seconds
+    return None
 
 
 @pytest.fixture(autouse=True, name="test_data")

@@ -23,12 +23,11 @@ def blink(stone, num_steps):
     num_steps -= 1
     if stone == 0:
         return blink(1, num_steps)
-    elif len_stone % 2 == 0:
+    if len_stone % 2 == 0:
         left_stone = int(str_stone[: len_stone // 2])
         right_stone = int(str_stone[len_stone // 2 :])
         return blink(left_stone, num_steps) + blink(right_stone, num_steps)
-    else:
-        return blink(stone * 2024, num_steps)
+    return blink(stone * 2024, num_steps)
 
 
 def day11_part1(data):

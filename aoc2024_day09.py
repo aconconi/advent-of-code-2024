@@ -8,28 +8,30 @@ from dataclasses import dataclass
 import pytest
 
 FREE_SPACE = "."
-SPACE_ID = -1
+SPACE_id_number = -1
 
 
 @dataclass(order=True)
 class Sequence:
     start: int
     size: int
-    id: int
+    id_number: int
 
     def __str__(self) -> str:
-        return self.size * (str(self.id) if self.id >= 0 else ".")
+        return self.size * (str(self.id_number) if self.id_number >= 0 else ".")
 
     def checksum(self) -> int:
-        return sum(self.id * i for i in range(self.start, self.start + self.size))
+        return sum(
+            self.id_number * i for i in range(self.start, self.start + self.size)
+        )
 
     def gen_blocks(self):
         for i in range(self.size):
-            yield self.start + i, self.id
+            yield self.start + i, self.id_number
 
     @classmethod
     def from_sequence(cls, sequence):
-        return cls(sequence.start, sequence.size, sequence.id)
+        return cls(sequence.start, sequence.size, sequence.id_number)
 
 
 def parse_input(file_name):
@@ -38,16 +40,16 @@ def parse_input(file_name):
     start = 0
     files = []
     spaces = []
-    id = 0
+    id_number = 0
     is_file = True
     for digit in disk:
         size = int(digit)
         if is_file:
-            files.append(Sequence(start, size, id))
-            id += 1
+            files.append(Sequence(start, size, id_number))
+            id_number += 1
         else:
             if size > 0:
-                spaces.append(Sequence(start, size, SPACE_ID))
+                spaces.append(Sequence(start, size, SPACE_id_number))
         start += size
         is_file = not is_file
     return files, spaces
@@ -69,7 +71,11 @@ def day09_part1(data):
         ):
             move_size = min(current_file.size, current_space.size)
             processed.append(
-                Sequence(size=move_size, start=current_space.start, id=current_file.id)
+                Sequence(
+                    size=move_size,
+                    start=current_space.start,
+                    id_number=current_file.id_number,
+                )
             )
 
             current_file.size -= move_size
@@ -105,7 +111,7 @@ def day09_part2(data):
                 Sequence(
                     start=current_space.start,
                     size=current_file.size,
-                    id=current_file.id,
+                    id_number=current_file.id_number,
                 )
             )
             current_space.start += current_file.size

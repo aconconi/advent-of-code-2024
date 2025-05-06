@@ -45,33 +45,35 @@ def parse_input(file_name):
     return grid_data, "".join(line.strip() for line in dir_data)
 
 
-def step(pos, dir):
+def step(pos, direction):
     x, y = pos
-    dx, dy = DIRMOVE[dir]
+    dx, dy = DIRMOVE[direction]
     return x + dx, y + dy
 
 
-def can_move(grid, pos, dir):
-    next_pos = step(pos, dir)
+def can_move(grid, pos, direction):
+    next_pos = step(pos, direction)
     next_val = grid.get(next_pos)
     match next_val:
         case ".":
             return True
         case "O":
-            return can_move(grid, next_pos, dir)
-        case "[" | "]" if dir in "><":
-            return can_move(grid, next_pos, dir)
-        case "[" | "]" if dir in "^v":
+            return can_move(grid, next_pos, direction)
+        case "[" | "]" if direction in "><":
+            return can_move(grid, next_pos, direction)
+        case "[" | "]" if direction in "^v":
             other_pos = step(next_pos, "<" if next_val == "]" else ">")
-            return can_move(grid, next_pos, dir) and can_move(grid, other_pos, dir)
+            return can_move(grid, next_pos, direction) and can_move(
+                grid, other_pos, direction
+            )
         case "#":
             return False
     raise ValueError(f"Unknown cell value {next_val}")
 
 
-def move(grid, pos, dir):
+def move(grid, pos, direction):
     current_val = grid.get(pos)
-    next_pos = step(pos, dir)
+    next_pos = step(pos, direction)
     next_val = grid.get(next_pos)
     match next_val:
         case ".":
@@ -80,23 +82,23 @@ def move(grid, pos, dir):
             if current_val == "@":
                 grid.submarine = next_pos
         case "O":
-            move(grid, next_pos, dir)
-            move(grid, pos, dir)
+            move(grid, next_pos, direction)
+            move(grid, pos, direction)
         case "[" | "]":
-            move(grid, next_pos, dir)
-            if dir in "^v":
+            move(grid, next_pos, direction)
+            if direction in "^v":
                 other_pos = (
                     step(next_pos, "<") if next_val == "]" else step(next_pos, ">")
                 )
-                move(grid, other_pos, dir)
-            move(grid, pos, dir)
+                move(grid, other_pos, direction)
+            move(grid, pos, direction)
 
 
 def solve(grid_data, directions):
     grid = Grid(grid_data)
-    for dir in directions:
-        if can_move(grid, grid.submarine, dir):
-            move(grid, grid.submarine, dir)
+    for direction in directions:
+        if can_move(grid, grid.submarine, direction):
+            move(grid, grid.submarine, direction)
     return grid.score()
 
 

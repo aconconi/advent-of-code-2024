@@ -32,26 +32,26 @@ class Grid:
         x, y = pos
         return self.grid[y][x] if self.is_inside(pos) else None
 
-    def step(self, pos, dir):
+    def step(self, pos, direction):
         x, y = pos
-        dx, dy = [(0, -1), (1, 0), (0, 1), (-1, 0)][dir]
+        dx, dy = [(0, -1), (1, 0), (0, 1), (-1, 0)][direction]
         return (x + dx, y + dy)
 
 
 def day06_part1(grid):
     pos = grid.start
-    dir = 0
+    direction = 0
     seen = set()
     while True:
         seen.add(pos)
-        new_pos = grid.step(pos, dir)
+        new_pos = grid.step(pos, direction)
         match grid.get(new_pos):
             case None:
                 # went off the grid, we are done
                 return len(seen)
             case "#":
                 # hit a wall, turn right
-                dir = (dir + 1) % 4
+                direction = (direction + 1) % 4
             case _:
                 # move forward
                 pos = new_pos
@@ -60,14 +60,14 @@ def day06_part1(grid):
 def day06_part2(grid):
     def is_loop(grid, obstruction):
         pos = grid.start
-        dir = 0
+        direction = 0
         seen = set()
         while True:
-            if (pos, dir) in seen:
+            if (pos, direction) in seen:
                 # loop found
                 return True
-            seen.add((pos, dir))
-            new_pos = grid.step(pos, dir)
+            seen.add((pos, direction))
+            new_pos = grid.step(pos, direction)
             cell = "#" if new_pos == obstruction else grid.get(new_pos)
             match cell:
                 case None:
@@ -75,7 +75,7 @@ def day06_part2(grid):
                     return False
                 case "#":
                     # hit a wall (or obstruction), turn right
-                    dir = (dir + 1) % 4
+                    direction = (direction + 1) % 4
                 case _:
                     # move forward
                     pos = new_pos

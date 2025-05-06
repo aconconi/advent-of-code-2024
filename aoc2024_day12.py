@@ -116,7 +116,7 @@ def score_region(grid: Grid, start_pos: tuple[int, int]) -> int:
     return area * perimeter
 
 
-def perimeter(grid, region):
+def get_perimeter(grid, region):
     return sum(
         neigh not in region
         for pos in region
@@ -125,7 +125,9 @@ def perimeter(grid, region):
 
 
 def day12_part1(grid):
-    return sum(len(region) * perimeter(grid, region) for region in grid.find_regions())
+    return sum(
+        len(region) * get_perimeter(grid, region) for region in grid.find_regions()
+    )
 
 
 def day12_part2(grid):

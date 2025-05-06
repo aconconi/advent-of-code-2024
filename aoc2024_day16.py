@@ -99,39 +99,39 @@ def day16_part2(grid):
 
 # Fixture for loading grid data
 @pytest.fixture
-def grid_data(request):
+def grid_test_data(request):
     file_name = request.param  # Get the file name from parametrize
     return parse_input(file_name)
 
 
 # Parametrizing part1 test with the fixture
 @pytest.mark.parametrize(
-    "grid_data, expected_part1",
+    "grid_test_data, expected_part1",
     [
         ("data/day16_test.txt", 7036),
         ("data/day16_test2.txt", 11048),
     ],
     indirect=[
-        "grid_data"
+        "grid_test_data"
     ],  # Indicating that grid_data should be handled by the fixture
 )
-def test_day16_part1(grid_data, expected_part1):
-    assert day16_part1(grid_data) == expected_part1
+def test_day16_part1(grid_test_data, expected_part1):
+    assert day16_part1(grid_test_data) == expected_part1
 
 
 # Parametrizing part2 test with the fixture
 @pytest.mark.parametrize(
-    "grid_data, expected_part2",
+    "grid_test_data, expected_part2",
     [
         ("data/day16_test.txt", 45),
         ("data/day16_test2.txt", 64),
     ],
     indirect=[
-        "grid_data"
+        "grid_test_data"
     ],  # Indicating that grid_data should be handled by the fixture
 )
-def test_day16_part2(grid_data, expected_part2):
-    assert day16_part2(grid_data) == expected_part2
+def test_day16_part2(grid_test_data, expected_part2):
+    assert day16_part2(grid_test_data) == expected_part2
 
 
 if __name__ == "__main__":
