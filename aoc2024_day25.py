@@ -1,6 +1,6 @@
 """
 Advent of Code 2024
-Day 25:
+Day 25: Code Chronicle
 """
 
 from itertools import product
