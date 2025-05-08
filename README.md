@@ -30,3 +30,5 @@
 |  21 | [Keypad Conundrum](https://adventofcode.com/2024/day/21)             | [aoc2024_day21.py](aoc2024_day21.py) |
 |  22 | [Monkey Market](https://adventofcode.com/2024/day/22)                | [aoc2024_day22.py](aoc2024_day22.py) |
 |  23 | [LAN Party](https://adventofcode.com/2024/day/23)                    | [aoc2024_day23.py](aoc2024_day23.py) |
+|  24 | [Crossed Wires](https://adventofcode.com/2024/day/24)                | [aoc2024_day24.py](aoc2024_day24.py) |
+|  25 | [Code Chronicle](https://adventofcode.com/2024/day/25)               | [aoc2024_day25.py](aoc2024_day25.py) |
