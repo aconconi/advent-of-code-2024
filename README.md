@@ -1,9 +1,7 @@
 # My solutions for [Advent of Code 2024](https://adventofcode.com/2024)
 
 > [Advent of Code](https://adventofcode.com/2024/about) is an Advent calendar of small
-> programming puzzles for a variety of skill sets and skill levels that can be solved in
-> any programming language you like. People use them as a speed contest, interview prep,
-> company training, university coursework, practice problems, or to challenge each other.
+> programming puzzles created by [Eric Wastl](https://was.tl/).
 
 | Day | Puzzle                                                                | Solution                             |
 | --: | :------------------------------------------------------------------- | :----------------------------------- |
