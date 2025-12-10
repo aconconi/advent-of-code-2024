@@ -50,15 +50,11 @@ def day18_part2(falling, size):
     locs = set((x, y) for x in range(size) for y in range(size))
     start_loc = (0, 0)
     end_loc = (size - 1, size - 1)
-    return next(
-        (
-            coord
-            for coord in falling
-            if shortest_path_len(locs := locs - {coord}, start_loc, end_loc)
-            == float("inf")
-        ),
-        None,
-    )
+    for coord in falling:
+        locs -= {coord}
+        if shortest_path_len(locs, start_loc, end_loc) == float("inf"):
+            return coord
+    return None
 
 
 @pytest.fixture(autouse=True, name="test_data")
@@ -78,7 +74,7 @@ if __name__ == "__main__":
     input_data = parse_input("data/day18.txt")
 
     print("Day 18 Part 1:")
-    print(day18_part1(input_data, 71, 1024))  # Correct answer is 234
+    print(day18_part1(input_data, 71, 1024))
 
     print("Day 18 Part 2:")
-    print(day18_part2(input_data, 71))  # Correct answer is (58, 19
+    print(day18_part2(input_data, 71))

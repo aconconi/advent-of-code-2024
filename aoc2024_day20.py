@@ -60,11 +60,13 @@ def solve(walkable, start, min_saving, max_distance):
 
 
 def day20_part1(data):
-    return solve(*data, min_saving=100, max_distance=2)
+    walkable, start = data
+    return solve(walkable, start, min_saving=100, max_distance=2)
 
 
 def day20_part2(data):
-    return solve(*data, min_saving=100, max_distance=20)
+    walkable, start = data
+    return solve(walkable, start, min_saving=100, max_distance=20)
 
 
 @pytest.fixture(autouse=True, name="test_data")
@@ -73,18 +75,20 @@ def fixture_test_data():
 
 
 def test_day20_part1(test_data):
-    assert solve(*test_data, min_saving=1, max_distance=2) == 44
+    walkable, start = test_data
+    assert solve(walkable, start, min_saving=1, max_distance=2) == 44
 
 
 def test_day20_part2(test_data):
-    assert solve(*test_data, min_saving=50, max_distance=20) == 285
+    walkable, start = test_data
+    assert solve(walkable, start, min_saving=50, max_distance=20) == 285
 
 
 if __name__ == "__main__":
     input_data = parse_input("data/day20.txt")
 
     print("Day 20 Part 1:")
-    print(day20_part1(input_data))  # Correct answer is 1307
+    print(day20_part1(input_data))
 
     print("Day 20 Part 2:")
-    print(day20_part2(input_data))  # Correct answer is 986545
+    print(day20_part2(input_data))
